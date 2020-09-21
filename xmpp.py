@@ -1,59 +1,53 @@
 import sleekxmpp
+import logging
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError, IqTimeout
 from sleekxmpp.xmlstream.stanzabase import ET, ElementBase
 
 
 
-class Client(sleekxmpp.ClientXMPP):
-    def __init__(self, username, password, instance_name=None):
-        jid = "%s/%s" % (username, instance_name) if instance_name else username 
-        super(Client, self).__init__(jid, password)
-
-        self.instance_name = instance_name
-        self.add_event_handler('session_start', self.start)
-        #self.add_event_handler('message', self.receive)
+class Client(ClientXMPP):
+    def __init__(self, username, password):
+        print('Entry')
+        ClientXMPP.__init__(self, username, password)
+        self.add_event_handler('session_start', self.session_start)
+        self.add_event_handler('message', self.message)
 
         self.register_plugin('xep_0030') # Service Discovery
-        self.register_plugin('xep_0199') # XMPP Ping
         self.register_plugin('xep_0004') # Data forms
+        self.register_plugin('xep_0066') # Out-of-band Data
         self.register_plugin('xep_0077') # In-band Registration
-        self.register_plugin('xep_0045') # Mulit-User Chat (MUC)
+        self.register_plugin('xep_0199') # XMPP Ping
+        self.register_plugin('xep_0045') # Multi-User Chat (MUC)
         self.register_plugin('xep_0096') # File transfer
 
-        self.contacts = []
+    def session_start(self, event):
+        try:
+            self.get_roster()
+            print(self.get_roster())
+        except IqError as err:
+            logging.error('Error obteniendo el roster')
+            logging.error(err.iq['error']['condition'])
+            self.disconnect()
+        except IqTimeout:
+            logging.error('Servidor tarda mucho en responder...')
+            self.disconnect
 
-        if self.connect():
-            #print('You connect is ready')
-            self.process(block=False)
-        else:
-            raise Exception ('Unable to connect')
-
-    def start(self, event):
-        self.send_presence(pshow='chat', pstatus='Disponible')
-        roster = self.get_roster
-        print(roster)
-        for i in roster['roster']['items'].keys():
-            self.contacts.append(i)
+    def message(self, msg):
+        if msg['type'] in ('chat', 'normal'):
+            msg.reply('Thanks for sending:\n%(body)s' % msg).send()
     
-    def __del__(self):
-        self.close 
 
-    def close(self):
-        print('Closing XMPP connection')
-        self.disconnect(wait=False)
+if __name__ == '__main__':
+    DOMAIN = '@redes2020.xyz'
+    USER = 'MarcosPruebas'
+    PASS = 'marcos1234'
     
-    def send_msg(self, recipient, body):
-        message = self.Message()
-        message['to'] = recipient
-        message['type'] = 'chat'
-        message['body'] = body
-
-        print('Sending message: %s' % message)
-        message.send()
-
-
-clientxmpp = Client('MarcosGutierrez@redes2020.xyz', 'Marcos', 'redes2020.xyz')
+    logging.basicConfig(level=logging.DEBUG, format='%(levelname)-8s %(message)s')
+    
+    clientxmpp = Client(USER+DOMAIN, PASS)
+    clientxmpp.connect()
+    clientxmpp.process(block=True)
 
 
 
