@@ -3,9 +3,9 @@ import logging
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError, IqTimeout
 
-class RegistrerUser(ClientXMPP):
+class RegistrerUser(sleekxmpp.ClientXMPP):
     def __init__(self, jid, password):
-        ClientXMPP.__init__(self, jid, password)
+        sleekxmpp.ClientXMPP.__init__(self, jid, password)
         self.add_event_handler('session_start', self.session_start)
         self.add_event_handler('register', self.register)
 
