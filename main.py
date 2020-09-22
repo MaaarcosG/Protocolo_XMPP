@@ -1,5 +1,6 @@
-from client import *
-from register import *
+from client import Client
+from register import RegistrerUser
+from tabulate import tabulate
 
 DOMAIN = '@redes2020.xyz'
 
@@ -33,14 +34,15 @@ while flag:
     if(opcion=='1'):
         if not login_check:
             print('<-------REGISTRO DE USUARIO------->')
+            name = input('Ingrse el Nombre: ')
             username = input('Ingrese usuario: ')
             password = input('Ingrese contraseña: ')
             jid = username + DOMAIN
-            register = RegistrerUser(jid, password)
+            register = RegistrerUser(jid, password, name)
             if register.connect():
                 register.process()
                 print('Inicio de Sesion Correctamente')
-                login_check = True
+                login_check = False
             else:
                 print('Error al Iniciar Sesion!')
         else:
@@ -52,7 +54,7 @@ while flag:
             username = input('Ingrese usuario: ')
             password = input('Ingrese contraseña: ')
             jid = username + DOMAIN
-            client = Client(jid, password, username)
+            client = Client(jid, password)
             if client.connect():
                 client.process()
                 print('Inicio de Sesion Correctamente')
@@ -62,11 +64,45 @@ while flag:
         else:
             if client.connect():
                 client.logout()
-                login_check = False
+                login_check
     
     if(opcion=='3'):
         print('<-------MOSTRAR USUARIOS CONECTADOS------->')
         if login_check:
-            client.list_user()
+            list_user = client.list_user()
+            table = tabulate(list_user, headers=['Email', 'JID', 'Username', 'Name'], tablefmt='grid')
+            print(table)
         else:
             print('No esta dentro del servidor...')
+    
+    if(opcion=='4'):
+        print('<-------AGREGAR UN USUARIO------->')
+        if login_check:
+            user_add = input('Ingrese el usuario: ')
+            client.add_user(user_add)
+    
+    if(opcion=='5'):
+        print('<-------MOSTRAR DETALLE DE CONTACTOS------->')
+        if login_check:
+            user_info = input('Ingrese el usuario: ')
+            information = client.info_user(user_info)
+            table = tabulate(information, headers=['Email', 'JID', 'Username', 'Name'], tablefmt='grid')
+            print(table)
+
+    if(opcion=='11'):
+        print('<-------ELIMINAR CUENTA ACTUAL------->')
+        if login_check:
+            client.delete()
+            opcion = '0'
+
+    #if(opcion=='12' or opcion =='0'):
+    if(opcion=='12'):
+        if client.connect():
+            client.logout()
+            login_check
+        print('Feliz Día, Vuelva Pronto')
+        flag = False
+    
+    if(opcion=='0'):
+        print('Vuelva Pronto')
+        exit()
