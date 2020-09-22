@@ -1,5 +1,5 @@
-from Registro import *
-from xmpp import *
+from client import *
+from register import *
 
 DOMAIN = '@redes2020.xyz'
 
@@ -10,16 +10,16 @@ menu_logging = '''
 '''
 
 menu_interaction = '''
-1. Mostrar los Usuarios
-2. Agregar un usuario a los contactos
-3. Mostrar detalles de contacto de un usuario
-4. Mensaje Directo (Privado)
-5. Conversacion Grupal
-6. Definir mensaje de presencia
-7. Enviar/Recibir notificaciones
-8. Enviar/Recibir archivos
-9. Eliminar cuenta (SESION INICIADA) 
-0. Cerrar
+3. Mostrar los Usuarios
+4. Agregar un usuario a los contactos
+5. Mostrar detalles de contacto de un usuario
+6. Mensaje Directo (Privado)
+7. Conversacion Grupal
+8. Definir mensaje de presencia
+9. Enviar/Recibir notificaciones
+10. Enviar/Recibir archivos
+11. Eliminar cuenta (SESION INICIADA) 
+12. Cerrar
 '''
 flag = True
 login_check = False
@@ -64,7 +64,7 @@ while flag:
                 client.logout()
                 login_check = False
     
-    if(opcion=='1'):
+    if(opcion=='3'):
         print('<-------MOSTRAR USUARIOS CONECTADOS------->')
         if login_check:
             client.list_user()
