@@ -39,7 +39,7 @@ class RegistrerUser(ClientXMPP):
         except IqTimeout:
             print("No response from server.")
             self.disconnect()
-            
+
 class Client(ClientXMPP):
     def __init__(self, jid, password):
         ClientXMPP.__init__(self, jid, password)
@@ -78,10 +78,12 @@ class Client(ClientXMPP):
             self.disconnect()
     
     def logout(self):
-        self.disconnect(wait=True)
+        print('Clossing XMPP Connection')
+        self.disconnect(wait=False)
 
     def message(self, msg):
         pass
+            
     
     def list_user(self):
         user = self.Iq()

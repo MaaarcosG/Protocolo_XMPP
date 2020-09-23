@@ -70,7 +70,7 @@ while flag:
         print('<-------MOSTRAR USUARIOS CONECTADOS------->')
         if login_check:
             list_user = client.list_user()
-            table = tabulate(list_user, headers=['Email', 'JID', 'Username', 'Name'], tablefmt='grid')
+            table = tabulate(list_user, headers=['Email', 'JID', 'Username', 'Name'], tablefmt='fancy_grid')
             print(table)
         else:
             print('No esta dentro del servidor...')
@@ -86,7 +86,7 @@ while flag:
         if login_check:
             user_info = input('Ingrese el usuario: ')
             information = client.info_user(user_info)
-            table = tabulate(information, headers=['Email', 'JID', 'Username', 'Name'], tablefmt='grid')
+            table = tabulate(information, headers=['Email', 'JID', 'Username', 'Name'], tablefmt='fancy_grid')
             print(table)
 
     if(opcion=='11'):
