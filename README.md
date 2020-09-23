@@ -6,11 +6,10 @@ Made by:
 
 ## Requeriments 
 - Python 3.8 +
-- ```bash
-$ pip3 install requirements.txt 
-```
+- Sleekxmpp 1.3.3
+- Tabulate 0.8.7
+
 ## To run client
-To start a cli ui with no dependencies run:
 ```bash
 $ pip3 main.py
 ```
