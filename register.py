@@ -1,7 +1,4 @@
 import sleekxmpp
-
-import logging
-
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError, IqTimeout
 from sleekxmpp.xmlstream.stanzabase import ET, ElementBase

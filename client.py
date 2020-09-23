@@ -1,8 +1,4 @@
 import sleekxmpp
-
-import logging
-import threading
-
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError, IqTimeout
 from sleekxmpp.xmlstream.stanzabase import ET, ElementBase
@@ -141,9 +137,7 @@ class Client(ClientXMPP):
 
     def delete(self):
         account = self.make_iq_set(ito='redes2020.xyz', ifrom=self.boundjid.user)
-        items = ET.fromstring("<query xmlns='jabber:iq:register'> \
-                                <remove/> \
-                              </query>")
+        items = ET.fromstring("<query xmlns='jabber:iq:register'> <remove/> </query>")
         account.append(items)
         res = account.send()
         if res['type'] == 'result':
