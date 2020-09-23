@@ -1,5 +1,4 @@
-from client import Client
-from register import RegistrerUser
+from client import Client, RegistrerUser
 from tabulate import tabulate
 
 DOMAIN = '@redes2020.xyz'
@@ -23,6 +22,7 @@ menu_interaction = '''
 12. Cerrar
 '''
 flag = True
+# Para mostrar el menu correspondiente
 login_check = False
 
 while flag:
