@@ -1,4 +1,8 @@
+import tableprint as tp
+
 import sleekxmpp
+import threading
+
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError, IqTimeout
 from sleekxmpp.xmlstream.stanzabase import ET, ElementBase
@@ -49,6 +53,9 @@ class Client(ClientXMPP):
         self.user = jid[0:-14]
         self.received = set()
         self.contacts = []
+        self.presedence = threading.Event()
+        self.rooms = {}
+        self.counter = 1
 
         self.register_plugin('xep_0030') # Service Discovery
         self.register_plugin('xep_0199') # XMPP Ping
@@ -82,9 +89,27 @@ class Client(ClientXMPP):
         self.disconnect(wait=False)
 
     def message(self, msg):
-        pass
-            
-    
+        #print(msg['type'])
+        if(str(msg['type']) =='chat'):
+            tp.banner('<-------NUEVO MENSAJE PRIVADO RECIBIDO------->')
+            print('De: %s' % msg['from'])
+            print('Mensaje: %s ' % msg['body'])
+            print('Siga escogiendo una opcion:')
+        # message group
+        elif(str(msg['type']) =='groupchat'):
+            tp.banner('<-------SALA %s------->' % msg['from'])
+            #print(msg['from][0])
+            print('De: %s' % msg['from'])
+            print('Mensaje: %s ' % msg['body'])
+            print('Siga escogiendo una opcion:')
+
+
+    def connection_correct(self):
+        if self.connect():
+            print('Usuario conectado correctamente: %s' % self.user)
+        else:
+            print('No se puede conectar...!')
+
     def list_user(self):
         user = self.Iq()
         user['type'] = 'set'
@@ -179,5 +204,39 @@ class Client(ClientXMPP):
         account.append(items)
         res = account.send()
         if res['type'] == 'result':
-            print('Cuenta Eliminada correctamente')
+            print('Cuenta %s Eliminada correctamente' % self.user)
+
+    def private_message(self, jid, message):
+        try:
+            self.send_message(mto=jid+'@redes2020.xyz', mbody=message, mfrom=self.boundjid.user, mtype='chat')
+            print('Mensaje enviado correctamente, destinatario: %s' % jid)
+        except IqError as e:
+            print("Error: %s" % e.iq['error']['text'])
+        except IqTimeout:
+            print("El server se ha tardado")
+
+    def group_message(self, room, message):
+        try:
+            self.send_message(mto=room + '@conference.redes2020.xyz', mbody=message, mtype='groupchat')
+            print('Mensaje enviado correctamente al ROOM: %s' % room)
+        except IqError as e:
+            print("Error: %s" % e.iq['error']['text'])
+        except IqTimeout:
+            print("El server se ha tardado")
+    
+    def CreateRoom(self, roomId):
+        status= 'READY TO GROUP'
+        self.plugin['xep_0045'].joinMUC(roomId+'@conference.redes2020.xyz', self.user, pstatus=status, pfrom=self.boundjid.full, wait=True)
+        self.plugin['xep_0045'].setAffiliation(roomId+'@conference.redes2020.xyz', self.boundjid.full, affiliation='owner')
+        self.plugin['xep_0045'].configureRoom(roomId+'@conference.redes2020.xyz', ifrom=self.boundjid.full)
+    
+    def JoinRoom(self, roomId):
+        print("JOIN TO GROUP: %s" % roomId)
+        status= 'READY TO GROUP'
+        self.plugin['xep_0045'].joinMUC(roomId+'@conference.redes2020.xyz', self.user, pstatus=status, pfrom=self.boundjid.full, wait=True)
+
+        
+
+
+    
         

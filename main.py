@@ -1,3 +1,5 @@
+import tableprint as tp
+
 from client import Client, RegistrerUser
 from tabulate import tabulate
 
@@ -7,6 +9,7 @@ menu_logging = '''
 1. Registrar Usuario
 2. Login
 0. Salir 
+Escoga una opcion:
 '''
 
 menu_interaction = '''
@@ -20,6 +23,7 @@ menu_interaction = '''
 10. Enviar/Recibir archivos
 11. Eliminar cuenta (SESION INICIADA) 
 12. Cerrar
+Escoga una opcion:
 '''
 flag = True
 # Para mostrar el menu correspondiente
@@ -27,37 +31,36 @@ login_check = False
 
 while flag:
     if not(login_check):
+        tp.banner('Bienvenido al Server %s' % DOMAIN)
         opcion = input(menu_logging)
     else:
+        tp.banner('<-------¿Que desea Realizar?------->')
         opcion = input(menu_interaction)
     
     if(opcion=='1'):
         if not login_check:
-            print('<-------REGISTRO DE USUARIO------->')
-            name = input('Ingrse el Nombre: ')
+            tp.banner('<-------REGISTRO DE USUARIO------->')
+            name = input('Ingrese el Nombre: ')
             username = input('Ingrese usuario: ')
             password = input('Ingrese contraseña: ')
             jid = username + DOMAIN
             register = RegistrerUser(jid, password, name)
             if register.connect():
-                register.process()
-                print('Inicio de Sesion Correctamente')
+                register.process(block=True)
                 login_check = False
             else:
                 print('Error al Iniciar Sesion!')
-        else:
-            print('Ya esta loggeado, se pasa a la siguiente opcion...')
             
     if(opcion=='2'):
         if not login_check:
-            print('<-------INICIAR SESION------->')
+            tp.banner('<-------INICIAR SESION------->')
             username = input('Ingrese usuario: ')
             password = input('Ingrese contraseña: ')
             jid = username + DOMAIN
             client = Client(jid, password)
             if client.connect():
                 client.process()
-                print('Inicio de Sesion Correctamente')
+                client.connection_correct()
                 login_check = True
             else:
                 print('Error al Iniciar Sesion!')
@@ -67,7 +70,7 @@ while flag:
                 login_check
     
     if(opcion=='3'):
-        print('<-------MOSTRAR USUARIOS CONECTADOS------->')
+        tp.banner('<-------MOSTRAR USUARIOS CONECTADOS------->')
         if login_check:
             list_user = client.list_user()
             table = tabulate(list_user, headers=['Email', 'JID', 'Username', 'Name'], tablefmt='fancy_grid')
@@ -76,21 +79,47 @@ while flag:
             print('No esta dentro del servidor...')
     
     if(opcion=='4'):
-        print('<-------AGREGAR UN USUARIO------->')
+        tp.banner('<-------AGREGAR UN USUARIO------->')
         if login_check:
             user_add = input('Ingrese el usuario: ')
             client.add_user(user_add)
     
     if(opcion=='5'):
-        print('<-------MOSTRAR DETALLE DE CONTACTOS------->')
+        tp.banner('<-------MOSTRAR DETALLE DE CONTACTOS------->')
         if login_check:
             user_info = input('Ingrese el usuario: ')
             information = client.info_user(user_info)
             table = tabulate(information, headers=['Email', 'JID', 'Username', 'Name'], tablefmt='fancy_grid')
             print(table)
+    
+    if(opcion=='6'):
+        tp.banner('<-------ENVIAR MENSAJE PRIVADO------->')
+        if login_check:
+            destination = input('Ingrese el usuario, a quien le mandara mensaje: ')
+            message = input('Mensaje a Enviar: ')
+            client.private_message(destination, message)
+    if(opcion=='7'):
+        tp.banner('<-------MENSAJES GRUPALES------->')
+        if login_check:
+            opcion_rooms = input('1. Unirte\n2. Crear una Sala\n3. Enviar mensaje Grupal \nEscoga una opcion: ')
+            if(opcion_rooms=='1'):
+                room = input('Ingrese el room: ')
+                client.JoinRoom(room)
+
+            elif(opcion_rooms=='2'):
+                room = input('Ingrese el room ha crear: ')
+                client.CreateRoom(room)
+            
+            elif(opcion_rooms=='3'):
+                room = input('Ingrese el room: ')
+                message = input('Ingrese el mensaje: ')
+                client.group_message(room, message)
+            else:
+                print('No esta dentro de un grupo actualmente....')
+
 
     if(opcion=='11'):
-        print('<-------ELIMINAR CUENTA ACTUAL------->')
+        tp.banner('<-------ELIMINAR CUENTA ACTUAL------->')
         if login_check:
             client.delete()
             opcion = '0'
