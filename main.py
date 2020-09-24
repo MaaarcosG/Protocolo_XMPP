@@ -19,12 +19,18 @@ menu_interaction = '''
 6. Mensaje Directo (Privado)
 7. Conversacion Grupal
 8. Definir mensaje de presencia
-9. Enviar/Recibir notificaciones
-10. Enviar/Recibir archivos
-11. Eliminar cuenta (SESION INICIADA) 
-12. Cerrar
+9. Enviar archivos
+10. Eliminar cuenta (SESION INICIADA) 
+11. Cerrar
 Escoga una opcion:
 '''
+
+states = {
+    '1': 'chat',
+    '2': 'away',
+    '3': 'xa',
+    '4': 'dnd'
+}
 flag = True
 # Para mostrar el menu correspondiente
 login_check = False
@@ -98,17 +104,18 @@ while flag:
             destination = input('Ingrese el usuario, a quien le mandara mensaje: ')
             message = input('Mensaje a Enviar: ')
             client.private_message(destination, message)
+
     if(opcion=='7'):
         tp.banner('<-------MENSAJES GRUPALES------->')
         if login_check:
             opcion_rooms = input('1. Unirte\n2. Crear una Sala\n3. Enviar mensaje Grupal \nEscoga una opcion: ')
             if(opcion_rooms=='1'):
                 room = input('Ingrese el room: ')
-                client.JoinRoom(room)
+                client.joinRoom(room)
 
             elif(opcion_rooms=='2'):
                 room = input('Ingrese el room ha crear: ')
-                client.CreateRoom(room)
+                client.createRoom(room)
             
             elif(opcion_rooms=='3'):
                 room = input('Ingrese el room: ')
@@ -116,16 +123,22 @@ while flag:
                 client.group_message(room, message)
             else:
                 print('No esta dentro de un grupo actualmente....')
+    
+    if(opcion=='9'):
+        if login_check:
+            tp.banner('<-------ENVIO DE IMAGENES------->')
+            user = input('Ingrese el usuario: ')
+            file_path = input('File Path: ')
+            client.send_file(user, file_path)
 
-
-    if(opcion=='11'):
+    if(opcion=='10'):
         tp.banner('<-------ELIMINAR CUENTA ACTUAL------->')
         if login_check:
             client.delete()
             opcion = '0'
 
     #if(opcion=='12' or opcion =='0'):
-    if(opcion=='12'):
+    if(opcion=='11'):
         if client.connect():
             client.logout()
             login_check
@@ -134,4 +147,5 @@ while flag:
     
     if(opcion=='0'):
         print('Vuelva Pronto')
+        print('Cerrando Programa')
         exit()
