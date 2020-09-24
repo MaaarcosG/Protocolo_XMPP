@@ -3,7 +3,8 @@ Contains the protocol implementation using Sleekxmpp.
 Made by:
 - Sergio Juan Marcos Gutierrez Romero
 - Carne: 17909
-
+# Code
+See the code of project [Protocolo XMPP](https://github.com/MaaarcosG/Protocolo_XMPP.git)
 ## Requeriments 
 - Python 3.8 +
 - Sleekxmpp 1.3.3
