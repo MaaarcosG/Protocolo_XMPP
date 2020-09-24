@@ -22,9 +22,9 @@ To use the program it is simple, it shows you a menu with several options with w
 4. **Show specific user**: Enter the user you want to see
 5. **Send private message**: The user to whom the message will be sent is entered, and the message is entered.
 6. **Group conversation**
-	**- Join in group**: Enter the room
-	**- Create group**: Enter the number of room
-	**- Send message in group**: Enter the number of room and the message 
+**- Join in group**: Enter the room
+**- Create group**: Enter the number of room
+**- Send message in group**: Enter the number of room and the message 
 7. **Send images**: Enter the user, and file path to imagen send
 8. **Delete Account**: delete the account you are currently on 	
 9. **Log Out**: Close the session on the server and terminate the program
