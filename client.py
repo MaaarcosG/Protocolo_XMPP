@@ -115,11 +115,14 @@ class Client(ClientXMPP):
         if(str(msg['type']) =='chat'):
             if(len(msg['body'])>3000):
                 tp.banner('<-------IMAGEN RECIBIDA------->')
-                received = message['body'].encode('utf-8')
+                received = msg['body'].encode('utf-8')
                 received = base64.decodebytes(received)
                 with open("imagen.jpg", "wb") as file_path:
                     file_path.write(received)
-                print('-----')
+                # open de image, en another windows
+                with Image.open(filename) as img:
+                    img.show()
+                print('Siga escogiendo una opcion: ')
             else:
                 tp.banner('<-------NUEVO MENSAJE PRIVADO RECIBIDO------->')
                 print('De: %s' % str(msg['from']).split('@')[0])
@@ -300,9 +303,6 @@ class Client(ClientXMPP):
     
     def send_file(self, body, filename):
         msg = ''
-        # open de image, en another windows
-        with Image.open(filename) as img:
-            img.show()
         # send message to function in server
         with open(filename, 'rb') as img_file:
             msg = base64.b64encode(img_file.read()).decode('utf-8')
