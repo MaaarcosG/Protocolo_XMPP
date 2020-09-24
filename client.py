@@ -117,10 +117,11 @@ class Client(ClientXMPP):
                 tp.banner('<-------IMAGEN RECIBIDA------->')
                 received = msg['body'].encode('utf-8')
                 received = base64.decodebytes(received)
+                #save the imagen in dir
                 with open("imagen.jpg", "wb") as file_path:
                     file_path.write(received)
                 # open de image, en another windows
-                with Image.open(filename) as img:
+                with Image.open('imagen.jpg') as img:
                     img.show()
                 print('Siga escogiendo una opcion: ')
             else:
@@ -168,27 +169,32 @@ class Client(ClientXMPP):
                               </query>")
 
         user.append(items)
-        usr_list = user.send()
-        data = []
-        temp = []
-        cont = 0
-        
-        #lopps through all users and puts them into a list
-        for i in usr_list.findall('.//{jabber:x:data}value'):
-            cont += 1
-            txt = ''
-            if i.text == None:
-                txt = 'None'
-            else:
-                txt = i.text
+        try:
+            usr_list = user.send()
+            data = []
+            temp = []
+            cont = 0
             
-            temp.append(txt)
-            if cont == 4:
-                cont = 0
-                data.append(temp)
-                temp = []
+            #lopps through all users and puts them into a list
+            for i in usr_list.findall('.//{jabber:x:data}value'):
+                cont += 1
+                txt = ''
+                if i.text == None:
+                    txt = 'None'
+                else:
+                    txt = i.text
+                
+                temp.append(txt)
+                if cont == 4:
+                    cont = 0
+                    data.append(temp)
+                    temp = []
 
-        return data
+            return data
+        except IqError as err:
+            print("Error: %s" % err.iq['error']['text'])
+        except IqTimeout:
+            print("El server se ha tardado")
     
     # add user in contacts
     def add_user(self, jid):

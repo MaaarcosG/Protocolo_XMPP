@@ -123,6 +123,9 @@ while flag:
                 client.group_message(room, message)
             else:
                 print('No esta dentro de un grupo actualmente....')
+    if(opcion=='8'):
+        tp.banner('LOSIENTO IMPLEMENTACIÓN EN PROCESO....!')
+        login_check = True
     
     if(opcion=='9'):
         if login_check:
