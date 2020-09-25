@@ -48,9 +48,10 @@ while flag:
             tp.banner('<-------REGISTRO DE USUARIO------->')
             name = input('Ingrese el Nombre: ')
             username = input('Ingrese usuario: ')
+            email = input('Ingrese email: ')
             password = input('Ingrese contraseña: ')
             jid = username + DOMAIN
-            register = RegistrerUser(jid, password, name)
+            register = RegistrerUser(jid, password, name, email)
             if register.connect():
                 register.process(block=True)
                 login_check = False

@@ -12,9 +12,10 @@ from sleekxmpp.plugins.xep_0096 import stanza, File
 
 class RegistrerUser(ClientXMPP):
 
-    def __init__(self, jid, password, name):
+    def __init__(self, jid, password, name, email):
         ClientXMPP.__init__(self, jid, password)
         self.name = name
+        self.email = email 
         self.add_event_handler("session_start", self.session_start)
         self.add_event_handler("register", self.register_user)
 
@@ -34,6 +35,7 @@ class RegistrerUser(ClientXMPP):
         resp['register']['username'] = self.boundjid.user
         resp['register']['password'] = self.password
         resp['register']['name'] = self.name
+        resp['register']['email'] = self.email
         
         try:
             #print('ENTRO AL TRY')
