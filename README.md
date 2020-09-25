@@ -10,6 +10,11 @@ See the code of project [Protocolo XMPP](https://github.com/MaaarcosG/Protocolo_
 - Sleekxmpp 1.3.3
 - Tabulate 0.8.7
 
+## Install Requeriments
+```bash
+$ pip3 install -r requirements.txt
+```
+
 ## To run client
 ```bash
 $ python3 main.py

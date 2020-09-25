@@ -118,10 +118,10 @@ class Client(ClientXMPP):
                 received = msg['body'].encode('utf-8')
                 received = base64.decodebytes(received)
                 #save the imagen in dir
-                with open("imagen.jpg", "wb") as file_path:
+                with open("images/imagen.jpg", "wb") as file_path:
                     file_path.write(received)
                 # open de image, en another windows
-                with Image.open('imagen.jpg') as img:
+                with Image.open('images/imagen.jpg') as img:
                     img.show()
                 print('Siga escogiendo una opcion: ')
             else:
@@ -278,7 +278,7 @@ class Client(ClientXMPP):
     
     # create de room to group message
     def createRoom(self, roomId):
-        status= 'READY TO GROUP'
+        status= 'READY TO CREATE GROUP'
         self.plugin['xep_0045'].joinMUC(roomId+'@conference.redes2020.xyz', self.user, pstatus=status, pfrom=self.boundjid.full, wait=True)
         self.plugin['xep_0045'].setAffiliation(roomId+'@conference.redes2020.xyz', self.boundjid.full, affiliation='owner')
         self.plugin['xep_0045'].configureRoom(roomId+'@conference.redes2020.xyz', ifrom=self.boundjid.full)

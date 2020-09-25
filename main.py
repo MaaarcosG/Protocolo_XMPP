@@ -133,6 +133,7 @@ while flag:
             user = input('Ingrese el usuario: ')
             file_path = input('File Path: ')
             client.send_file(user, file_path)
+            login_check = True
 
     if(opcion=='10'):
         tp.banner('<-------ELIMINAR CUENTA ACTUAL------->')
